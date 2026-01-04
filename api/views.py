@@ -7,10 +7,19 @@ from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 class CategoriesListView(APIView):
-    permission_classes = [IsAuthenticated]
+    
 
     def get(self, request):
         categories = Categories.objects.all()
         serializer = CategoriesSerializer(categories, many=True)
+
+        return Response(serializer.data)
+    
+class QuizListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        quizzes = Quiz.objects.all()
+        serializer = QuizSerializer(quizzes, many=True)
 
         return Response(serializer.data)
