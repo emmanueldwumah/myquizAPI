@@ -24,4 +24,17 @@ class Question(models.Model):
     def __str__(self):
         return self.text
     
+class Choice(models.Model):
+    question = models.ForeignKey(Question, related_name='choices', on_delete=models.CASCADE)
+    text = models.CharField(max_length=300)
+    is_correct = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.is_correct:
+            Choice.objects.filter(
+                question=self.question,
+                is_correct=True
+            ).update(is_correct=False)
+        super().save(*args, **kwargs)
+    
     
