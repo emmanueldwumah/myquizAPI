@@ -26,3 +26,7 @@ class AttemptSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'score', 'completed_at']
         read_only_fields = ['user', 'score']
 
+class CategoriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categories
+        fields = ['name']
