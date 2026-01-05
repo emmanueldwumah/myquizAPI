@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from .models import Quiz, Question, Categories, Choice, Attempt
 
+class CategoriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categories
+        fields = ['name']
+
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
@@ -8,10 +13,11 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     choices = ChoiceSerializer(many=True)
+    category = CategoriesSerializer()
     
     class Meta:
         model = Question
-        fields = ['id', 'text', 'choices']
+        fields = ['id', 'text', 'choices', 'category']
 
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True)
@@ -26,7 +32,3 @@ class AttemptSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'score', 'completed_at']
         read_only_fields = ['user', 'score']
 
-class CategoriesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Categories
-        fields = ['name']
