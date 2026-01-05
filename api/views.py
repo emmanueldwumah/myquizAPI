@@ -1,8 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Quiz, Choice, Attempt, Categories
-from .serializers import QuizSerializer, CategoriesSerializer
+from .models import Quiz, Choice, Attempt, Categories, Question
+from .serializers import QuizSerializer, CategoriesSerializer, QuestionSerializer
+import random
 
 # Create your views here.
 class CategoriesListView(APIView):
@@ -21,6 +22,29 @@ class QuizListView(APIView):
         serializer = QuizSerializer(quizzes, many=True)
 
         return Response(serializer.data)
+    
+class QuizByCategaoryView(APIView):
+    def get(self, request, slug):
+        quiz = Quiz.objects.filter(
+            questions__category__slug = slug
+        ).distinct()
+
+        serializer = QuizSerializer(quiz, many=True)
+
+        return Response(serializer.data)
+    
+class RandomQuestionsByCategoryView(APIView):
+    def get(self, request, slug):
+        limit = int(request.query_params.get('limit', 10))
+        questions = list(Question.objects.filter(category__slug=slug))
+        random.shuffle(questions)
+        serializer = QuestionSerializer(
+            questions[:limit],
+            many = True
+        ) 
+
+        return Response(serializer.data)
+
     
 class SubmitQuizView(APIView):
 
@@ -46,3 +70,4 @@ class SubmitQuizView(APIView):
             "score": score,
             "attempt_id": attempt.id
         }, status=status.HTTP_201_CREATED)
+    

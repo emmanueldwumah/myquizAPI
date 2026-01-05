@@ -4,7 +4,7 @@ from .models import Quiz, Question, Categories, Choice, Attempt
 class CategoriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categories
-        fields = ['name']
+        fields = ['id', 'name', 'slug']
 
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,7 +17,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Question
-        fields = ['id', 'text', 'choices', 'category']
+        fields = ['id', 'text', 'category', 'choices']
 
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True)
